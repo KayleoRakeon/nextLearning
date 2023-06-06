@@ -1,0 +1,10 @@
+/** @format */
+
+.Footer {
+   color: #ee6c4d;
+   text-align: center;
+   border-top: 1px solid #ee6c4d;
+   padding: 15px 0;
+   box-sizing: border-box;
+   width: 100%;
+}

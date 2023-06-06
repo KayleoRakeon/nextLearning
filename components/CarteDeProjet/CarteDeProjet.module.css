@@ -1,0 +1,19 @@
+/** @format */
+
+.CarteDeProjet {
+   border: 1px solid #3d5a80;
+   border-radius: 5px;
+   padding: 15px;
+   transition: all 0.3s;
+   color: black;
+   text-decoration: none;
+}
+.CarteDeProjet:hover {
+   background: #3d5a80;
+   color: white;
+}
+
+.CarteDeProjet h3 {
+   font-weight: light;
+   font-size: 1.1em;
+}
