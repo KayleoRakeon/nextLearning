@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 // Composant
 import Link from 'next/link';
 
-export default function CarteDeProjet() {
+export default function CarteDeProjet(props) {
    // Variables
    const router = useRouter();
-   const slug = 'kadaboo';
+   const { titre, description, slug, client, annee } = props.projet;
 
    // Methode
    //    const projectClickedHandler = () => {
@@ -27,11 +27,8 @@ export default function CarteDeProjet() {
          href={`/projets/${slug}`}
          className={classes.CarteDeProjet}
       >
-         <h3>Kadaboo</h3>
-         <p>
-            Création d'une plateforme pour aider les
-            professionnel.le.s du milieu de l'éducation
-         </p>
+         <h3>{titre}</h3>
+         <p>{description}</p>
       </Link>
    );
 }
