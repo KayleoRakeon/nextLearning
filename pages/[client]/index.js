@@ -2,11 +2,11 @@
 
 // Librairie
 import { useRouter } from 'next/router';
-import { MongoClient } from 'mongodb';
 
 // Composant
 import CarteDeProjet from '../../components/CarteDeProjet/CarteDeProjet';
 import FiltresDeClient from '../../components/FiltresDeClient/FiltresDeClient';
+import { connectToDatabase } from '../../helpers/mongodb';
 
 export default function ProjetsDuClient(props) {
    // Variables
@@ -22,7 +22,10 @@ export default function ProjetsDuClient(props) {
       <main>
          <h1>{clientName}</h1>
 
-         <FiltresDeClient client={router.query.client} />
+         <FiltresDeClient
+            client={router.query.client}
+            annees={props.annees}
+         />
 
          <div
             style={{
@@ -49,17 +52,41 @@ export default function ProjetsDuClient(props) {
  */
 
 export async function getStaticPaths() {
+   // Connexion a MongoDB
+   const client = await connectToDatabase();
+   const db = client.db();
+
+   // Recuperer les projets
+   const projets = await db.collection('projets').find().toArray();
+
+   let arrayPaths = projets.map((projet) => {
+      let retour;
+      retour =
+         projet.client === 'Projet personnel'
+            ? 'perso'
+            : projet.client;
+      return retour;
+   });
+   arrayPaths = [...new Set(arrayPaths)];
+   const dynamicPaths = arrayPaths.map((path) => ({
+      params: {
+         client: path,
+      },
+   }));
+
+   console.log(dynamicPaths);
+
    return {
       // paths est un tableau
-      paths: [{ params: { client: 'kadaboo' } }],
-      fallback: 'blocking', // avec true, on autorise a faire un appel a getStaticProps
+      paths: dynamicPaths,
+      fallback: false, // avec true, on autorise a faire un appel a getStaticProps
    };
 }
 
 export async function getStaticProps(context) {
    // Variable
    let projets;
-   let client;
+   let annees;
    const { params } = context;
    let clientParam = params.client;
 
@@ -69,9 +96,7 @@ export async function getStaticProps(context) {
 
    try {
       // Connexion a MongoDB
-      client = await MongoClient.connect(
-         'mongodb+srv://ben-next:yOLrmINVSBIuSYuK@cluster0.fkmsvrl.mongodb.net/portfolio?retryWrites=true&w=majority'
-      );
+      const client = await connectToDatabase();
 
       // Connexion a DB
       const db = client.db();
@@ -80,14 +105,21 @@ export async function getStaticProps(context) {
       projets = await db
          .collection('projets')
          .find({ client: clientParam })
+         .sort({ dateDePublication: 'asc' })
          .toArray();
+
+      // Recuperer les annees
+      projets = JSON.parse(JSON.stringify(projets));
+      annees = projets.map((projet) => projet.annee);
+      annees = [...new Set(annees)];
    } catch (error) {
       projets = [];
    }
 
    return {
       props: {
-         projets: JSON.parse(JSON.stringify(projets)),
+         projets: projets,
+         annees: annees,
       },
    };
 }

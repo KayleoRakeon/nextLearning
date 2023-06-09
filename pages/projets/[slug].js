@@ -1,33 +1,89 @@
 /** @format */
 
 // Librairie
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { connectToDatabase } from '../../helpers/mongodb';
 
-export default function Projet() {
+export default function Projet(props) {
    // Variables
-   const router = useRouter();
+   // const router = useRouter();
+   let { titre, slug, description, client, annee } = props.projet;
+
+   let clientSlug = client === 'Projet personnel' ? 'perso' : client;
 
    // Methode
-   const titleClickHandler = () => {
-      // router.push('/'); // Passe a une page suivante
-      router.replace('/');
-      // Ne permet pas de revenir en arriere car remplace la page actuelle
-   };
+   // const titleClickHandler = () => {
+   //    // router.push('/'); // Passe a une page suivante
+   //    router.replace('/');
+   //    // Ne permet pas de revenir en arriere car remplace la page actuelle
+   // };
 
    return (
       <main>
-         <h1 style={{ marginBottom: '0.5rem' }}>
-            {router.query.slug}
-         </h1>
+         <h1 style={{ marginBottom: '0.5rem' }}>{titre}</h1>
          <small>
             <Link
-               href="/perso"
+               href={`/${clientSlug}`}
                style={{ color: '#ee6c4d', textDecoration: 'none' }}
             >
-               Projet personnel
+               {client}
             </Link>
          </small>
+
+         <em style={{ display: 'block', marginTop: '15px' }}>
+            {annee}
+         </em>
+         <p>{description}</p>
       </main>
    );
+}
+
+export async function getStaticPaths() {
+   let projets;
+
+   try {
+      const client = await connectToDatabase();
+      const db = client.db();
+
+      projets = await db.collection('projets').find().toArray();
+   } catch (error) {
+      projets = [];
+   }
+
+   const dynamicPaths = projets.map((projet) => ({
+      params: {
+         slug: projet.slug,
+      },
+   }));
+
+   return {
+      paths: dynamicPaths,
+      fallback: 'blocking',
+   };
+}
+
+export async function getStaticProps(context) {
+   let projet;
+   const { params } = context;
+   const slugParam = params.slug;
+   console.log(slugParam);
+
+   try {
+      const client = await connectToDatabase();
+      const db = client.db();
+
+      projet = await db
+         .collection('projets')
+         .find({ slug: slugParam })
+         .toArray();
+   } catch (error) {
+      projet = [];
+   }
+
+   return {
+      props: {
+         projet: JSON.parse(JSON.stringify(projet[0])),
+      },
+   };
 }

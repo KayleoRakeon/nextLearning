@@ -1,7 +1,7 @@
 /** @format */
 
 // Librairie
-import { MongoClient } from 'mongodb';
+import { connectToDatabase } from '../../helpers/mongodb';
 
 // Composant
 import CarteDeProjet from '../../components/CarteDeProjet/CarteDeProjet';
@@ -29,19 +29,17 @@ export default function Projets(props) {
 export async function getStaticProps() {
    // Variable
    let projets;
-   let client;
 
    try {
-      // Connexion a MongoDB
-      client = await MongoClient.connect(
-         'mongodb+srv://ben-next:yOLrmINVSBIuSYuK@cluster0.fkmsvrl.mongodb.net/portfolio?retryWrites=true&w=majority'
-      );
-
-      // Connexion a DB
+      const client = await connectToDatabase();
       const db = client.db();
 
       // Recuperer les projets
-      projets = await db.collection('projets').find().toArray();
+      projets = await db
+         .collection('projets')
+         .find()
+         .sort({ dateDePublication: 'asc' })
+         .toArray();
    } catch (error) {
       projets = [];
    }

@@ -29,6 +29,7 @@ export default function CarteDeProjet(props) {
       >
          <h3>{titre}</h3>
          <p>{description}</p>
+         <small>{annee}</small>
       </Link>
    );
 }
