@@ -37,7 +37,7 @@ export default function ProjetsDuClientFiltre(props) {
             }}
          >
             {props.projets.map((projet) => (
-               <CarteDeProjet projet={projet} />
+               <CarteDeProjet projet={projet} key={projet._id} />
             ))}
          </div>
       </main>
@@ -118,5 +118,6 @@ export async function getStaticProps(context) {
          projets: projets,
          annees: annees,
       },
+      revalidate: 3600,
    };
 }

@@ -19,7 +19,7 @@ export default function Projets(props) {
             }}
          >
             {props.projets.map((projet) => (
-               <CarteDeProjet projet={projet} />
+               <CarteDeProjet projet={projet} key={projet._id} />
             ))}
          </div>
       </main>
@@ -48,5 +48,6 @@ export async function getStaticProps() {
       props: {
          projets: JSON.parse(JSON.stringify(projets)),
       },
+      revalidate: 3600,
    };
 }

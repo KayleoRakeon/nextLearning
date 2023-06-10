@@ -19,7 +19,7 @@ export default function FiltresDeClient(props) {
          >
             Tout
          </Link>
-         {props.annees.map((annee) => (
+         {props.annees.map((annee, index) => (
             <Link
                href={`/${props.client}/${annee}`}
                style={{
@@ -30,6 +30,7 @@ export default function FiltresDeClient(props) {
                   fontWeight: 'bold',
                   textDecoration: 'none',
                }}
+               key={index}
             >
                {annee}
             </Link>

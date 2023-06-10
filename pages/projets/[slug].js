@@ -67,7 +67,6 @@ export async function getStaticProps(context) {
    let projet;
    const { params } = context;
    const slugParam = params.slug;
-   console.log(slugParam);
 
    try {
       const client = await connectToDatabase();
@@ -81,9 +80,22 @@ export async function getStaticProps(context) {
       projet = [];
    }
 
+   // Redireciton vers la page 404 lorsqu'un projet n'existe pas
+   if (!projet[0]) {
+      return {
+         notFound: true,
+
+         // Autre option
+         // redirect: {
+         //    destination: '/'
+         // }
+      };
+   }
+
    return {
       props: {
-         projet: JSON.parse(JSON.stringify(projet[0])),
+         projet: JSON.parse(JSON.stringify(projet))[0],
       },
+      revalidate: 3600,
    };
 }
