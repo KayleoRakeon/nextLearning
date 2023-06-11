@@ -39,31 +39,71 @@ export default function Projet(props) {
    );
 }
 
-export async function getStaticPaths() {
-   let projets;
+// RENDU STATIC COTE CLIENT
 
-   try {
-      const client = await connectToDatabase();
-      const db = client.db();
+// export async function getStaticPaths() {
+//    let projets;
 
-      projets = await db.collection('projets').find().toArray();
-   } catch (error) {
-      projets = [];
-   }
+//    try {
+//       const client = await connectToDatabase();
+//       const db = client.db();
 
-   const dynamicPaths = projets.map((projet) => ({
-      params: {
-         slug: projet.slug,
-      },
-   }));
+//       projets = await db.collection('projets').find().toArray();
+//    } catch (error) {
+//       projets = [];
+//    }
 
-   return {
-      paths: dynamicPaths,
-      fallback: 'blocking',
-   };
-}
+//    const dynamicPaths = projets.map((projet) => ({
+//       params: {
+//          slug: projet.slug,
+//       },
+//    }));
 
-export async function getStaticProps(context) {
+//    return {
+//       paths: dynamicPaths,
+//       fallback: 'blocking',
+//    };
+// }
+
+// export async function getStaticProps(context) {
+// let projet;
+// const { params } = context;
+// const slugParam = params.slug;
+
+// try {
+//    const client = await connectToDatabase();
+//    const db = client.db();
+
+//    projet = await db
+//       .collection('projets')
+//       .find({ slug: slugParam })
+//       .toArray();
+// } catch (error) {
+//    projet = [];
+// }
+
+// // Redireciton vers la page 404 lorsqu'un projet n'existe pas
+// if (!projet[0]) {
+//    return {
+//       notFound: true,
+
+//       // Autre option
+//       // redirect: {
+//       //    destination: '/'
+//       // }
+//    };
+// }
+
+// return {
+//    props: {
+//       projet: JSON.parse(JSON.stringify(projet))[0],
+//    },
+//    revalidate: 3600,
+// };
+// }
+
+// RENDU COTE SERVEUR
+export async function getServerSideProps(context) {
    let projet;
    const { params } = context;
    const slugParam = params.slug;
@@ -96,6 +136,5 @@ export async function getStaticProps(context) {
       props: {
          projet: JSON.parse(JSON.stringify(projet))[0],
       },
-      revalidate: 3600,
    };
 }
