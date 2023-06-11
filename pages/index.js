@@ -3,10 +3,16 @@
 // Librairie
 import CarteDeProjet from '../components/CarteDeProjet/CarteDeProjet';
 import { connectToDatabase } from '../helpers/mongodb';
+import Head from 'next/head';
 
 export default function Index(props) {
    return (
       <main>
+         <Head>
+            <title>
+               Bienvenue sur le portfolio de Benjamin Bourgouin
+            </title>
+         </Head>
          <h1>Bienvenue sur mon portfolio</h1>
          <div
             style={{

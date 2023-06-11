@@ -4,6 +4,7 @@
 // import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { connectToDatabase } from '../../helpers/mongodb';
+import Head from 'next/head';
 
 export default function Projet(props) {
    // Variables
@@ -21,6 +22,9 @@ export default function Projet(props) {
 
    return (
       <main>
+         <Head>
+            <title>{titre} | Benjamin Bourgouin</title>
+         </Head>
          <h1 style={{ marginBottom: '0.5rem' }}>{titre}</h1>
          <small>
             <Link

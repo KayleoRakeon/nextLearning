@@ -2,6 +2,7 @@
 
 // Librairie
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 // Composant
 import CarteDeProjet from '../../components/CarteDeProjet/CarteDeProjet';
@@ -21,6 +22,9 @@ export default function ProjetsDuClientFiltre(props) {
 
    return (
       <main>
+         <Head>
+            <title>{title} | Benjamin Bourgouin</title>
+         </Head>
          <h1>{title}</h1>
 
          <FiltresDeClient
