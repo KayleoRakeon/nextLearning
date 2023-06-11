@@ -4,6 +4,7 @@
 import CarteDeProjet from '../components/CarteDeProjet/CarteDeProjet';
 import { connectToDatabase } from '../helpers/mongodb';
 import Head from 'next/head';
+import Image from 'next/image';
 
 export default function Index(props) {
    return (
@@ -51,15 +52,27 @@ export default function Index(props) {
                   </a>
                </p>
             </div>
-            <img
-               src="/photoDeProfil.jpg"
-               alt="Photo de moi"
-               style={{
-                  width: '150px',
-                  height: '150px',
-                  borderRadius: '50%',
-               }}
-            />
+            <div>
+               <div
+                  style={{
+                     borderRadius: '50%',
+                     overflow: 'hidden',
+                     lineHeight: '0',
+                  }}
+               >
+                  <Image
+                     src="/photoDeProfil.jpg"
+                     alt="Photo de moi"
+                     width={150}
+                     height={150}
+                     layout="fixed"
+                     quality={100}
+                     //unoptimized --> Pour que NextJS ne s'occupe pas de l'optimisation de l'image
+                     //priority={true} --> Pour que NextJS charge d'abord cette image avant le reste
+                     //loading="eager"
+                  />
+               </div>
+            </div>
          </div>
 
          <h2 style={{ marginTop: '45px' }}>Mes derniers projets</h2>
