@@ -3,6 +3,10 @@
 // Librairies
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
+import { SpinnerDotted } from 'spinners-react';
+import { useState } from 'react';
+import Error from '../../components/ui/Error/Error';
+import { useRouter } from 'next/router';
 
 export default function Ajouter() {
    const {
@@ -10,25 +14,37 @@ export default function Ajouter() {
       handleSubmit,
       formState: { errors },
    } = useForm();
+   const router = useRouter();
+
+   // State
+   const [isLoading, setIsLoading] = useState(false);
+   const [error, setError] = useState();
 
    const formSubmittedHandler = async (data) => {
-      // Envoyer le nouveau projet sur notre API NextJS
-      const response = await fetch('/api/projet', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(data),
-      });
+      if (!isLoading) {
+         setIsLoading(true);
+         setError(null);
 
-      const fetchedData = await response.json();
-      if (!response.ok) {
-         console.log(
-            fetchedData.message ||
-               "Une erreur est survenue dans l'API"
-         );
-      } else {
-         console.log(fetchedData.projet);
+         // Envoyer le nouveau projet sur notre API NextJS
+         const response = await fetch('/api/projet', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+         });
+
+         const fetchedData = await response.json();
+         if (!response.ok) {
+            setIsLoading(false);
+            setError(
+               fetchedData.message ||
+                  "Une erreur est survenue dans l'API"
+            );
+         } else {
+            setIsLoading(false);
+            router.replace(`/projets/${fetchedData.projet.slug}`);
+         }
       }
    };
 
@@ -58,20 +74,10 @@ export default function Ajouter() {
                      errors.client ||
                      errors.annee ||
                      errors.contenu) && (
-                     <div
-                        style={{
-                           margin: '15px 0',
-                           backgroundColor: '#ee6c4d',
-                           color: 'white',
-                           padding: '15px',
-                           borderRadius: '5px',
-                           fontWeight: 'bold',
-                        }}
-                     >
-                        Veuillez remplir tous les champs du
-                        formulaire.
-                     </div>
+                     <Error error="Veuillez remplir tous les champs du forumlaire." />
                   )}
+                  {error && <Error error={error} />}
+
                   <form onSubmit={handleSubmit(formSubmittedHandler)}>
                      <p>
                         <label
@@ -198,29 +204,6 @@ export default function Ajouter() {
                         />
                      </p>
 
-                     {/* <p>
-                        <label
-                           htmlFor="dateDePublication"
-                           style={{ display: 'block' }}
-                        >
-                           Date de publication
-                        </label>
-                        <input
-                           type="date"
-                           {...register('dateDePublication', {
-                              required: true,
-                           })}
-                           style={{
-                              display: 'block',
-                              width: '400px',
-                              border: '1px solid gray',
-                              padding: '10px 15px',
-                              borderRadius: '5px',
-                              marginTop: '5px',
-                           }}
-                        />
-                     </p> */}
-
                      <p>
                         <label
                            htmlFor="contenu"
@@ -261,7 +244,16 @@ export default function Ajouter() {
                               borderRadius: '5px',
                            }}
                         >
-                           Ajouter
+                           {isLoading ? (
+                              <SpinnerDotted
+                                 size={15}
+                                 thickness={100}
+                                 speed={100}
+                                 color="#ffffff"
+                              />
+                           ) : (
+                              'Ajouter'
+                           )}
                         </button>
                      </div>
                   </form>

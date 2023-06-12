@@ -1,0 +1,10 @@
+/** @format */
+
+.Error {
+   margin: 15px 0;
+   background-color: #ee6c4d;
+   color: white;
+   padding: 15px;
+   border-radius: 5px;
+   font-weight: bold;
+}
