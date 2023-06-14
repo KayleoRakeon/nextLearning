@@ -7,6 +7,7 @@ import { SpinnerDotted } from 'spinners-react';
 import { useState } from 'react';
 import Error from '../../components/ui/Error/Error';
 import { useRouter } from 'next/router';
+import Button from '../../components/ui/Button/Button';
 
 export default function Ajouter() {
    const {
@@ -234,16 +235,7 @@ export default function Ajouter() {
                            justifyContent: 'end',
                         }}
                      >
-                        <button
-                           type="submit"
-                           style={{
-                              border: 0,
-                              backgroundColor: '#ee6c4d',
-                              color: 'white',
-                              padding: '10px 15px',
-                              borderRadius: '5px',
-                           }}
-                        >
+                        <Button>
                            {isLoading ? (
                               <SpinnerDotted
                                  size={15}
@@ -254,7 +246,7 @@ export default function Ajouter() {
                            ) : (
                               'Ajouter'
                            )}
-                        </button>
+                        </Button>
                      </div>
                   </form>
                </div>

@@ -1,0 +1,10 @@
+/** @format */
+
+.Success {
+   margin: 15px 0;
+   background-color: #5cb85c;
+   color: white;
+   padding: 15px;
+   border-radius: 5px;
+   font-weight: bold;
+}
