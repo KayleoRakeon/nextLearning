@@ -1,10 +1,12 @@
 /** @format */
 
 import { connectToDatabase } from '../../helpers/mongodb';
+import { hashPassword } from '../../helpers/auth';
 
 export default async function handler(req, res) {
    if (req.method === 'POST') {
-      const { pseudo, email, password } = req.body;
+      const { pseudo, email } = req.body;
+      let { password } = req.body;
 
       //  Verifier que tous les champs soient rempls
       if (!pseudo || !email || !password) {
@@ -13,6 +15,9 @@ export default async function handler(req, res) {
          });
          return;
       }
+
+      // Securiser le mot de passe
+      password = await hashPassword(password);
 
       // Stocker le nouveau user
       const nouveauUser = { pseudo, email, password };

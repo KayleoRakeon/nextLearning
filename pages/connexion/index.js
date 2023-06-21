@@ -2,9 +2,14 @@
 
 // Librairie
 import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { SpinnerDotted } from 'spinners-react';
+import { useRouter } from 'next/router';
 
 // Components
 import Button from '../../components/ui/Button/Button';
+import Error from '../../components/ui/Error/Error';
 
 export default function Connexion() {
    // Variables
@@ -13,10 +18,29 @@ export default function Connexion() {
       handleSubmit,
       formState: { errors },
    } = useForm();
+   const router = useRouter();
+
+   // State
+   const [isLoading, setIsLoading] = useState(false);
+   const [error, setError] = useState();
 
    // Methode
-   const onFormSubmittedHandler = (data) => {
-      console.log(data);
+   const onFormSubmittedHandler = async (data) => {
+      setIsLoading(true);
+
+      const resultat = await signIn('credentials', {
+         email: data.email,
+         password: data.password,
+         redirect: false,
+      });
+
+      setIsLoading(false);
+
+      if (resultat.error) {
+         setError(resultat.error);
+      } else {
+         router.replace('/');
+      }
    };
 
    return (
@@ -37,6 +61,7 @@ export default function Connexion() {
                   padding: '30px',
                }}
             >
+               {error && <Error error={error} />}
                <form onSubmit={handleSubmit(onFormSubmittedHandler)}>
                   <p>
                      <label htmlFor="email">Adresse email</label>
@@ -85,7 +110,18 @@ export default function Connexion() {
                         justifyContent: 'end',
                      }}
                   >
-                     <Button>Je m'inscris</Button>
+                     <Button>
+                        {isLoading ? (
+                           <SpinnerDotted
+                              size={15}
+                              thickness={100}
+                              speed={100}
+                              color="#ffffff"
+                           />
+                        ) : (
+                           'Je me connecte'
+                        )}
+                     </Button>
                   </div>
                </form>
             </div>

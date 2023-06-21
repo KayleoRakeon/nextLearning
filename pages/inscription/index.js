@@ -63,101 +63,110 @@ export default function Inscription() {
          <h1 style={{ textAlign: 'center', marginTop: '35px' }}>
             Inscription
          </h1>
-         <section
-            style={{
-               display: 'flex',
-               justifyContent: 'center',
-               alignItems: 'flex-start',
-            }}
-         >
-            <div
+         {!success && (
+            <section
                style={{
-                  backgroundColor: '#f3f3f3',
-                  padding: '30px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
                }}
             >
-               {error && <Error error={error} />}
-               {success && <Success>{success}</Success>}
+               <div
+                  style={{
+                     backgroundColor: '#f3f3f3',
+                     padding: '30px',
+                  }}
+               >
+                  {error && <Error error={error} />}
 
-               <form onSubmit={handleSubmit(onFormSubmittedHandler)}>
-                  <p>
-                     <label htmlFor="pseudo">Pseudo</label>
-                     <input
-                        type="text"
-                        placeholder="Pseudo"
-                        className="input"
-                        {...register('pseudo', {
-                           required: true,
-                        })}
-                     />
-                     {errors.pseudo && (
-                        <small>Veuillez renseigner ce champs</small>
-                     )}
-                  </p>
-
-                  <p>
-                     <label htmlFor="email">Adresse email</label>
-                     <input
-                        type="email"
-                        placeholder="Adresse email"
-                        className="input"
-                        {...register('email', {
-                           required: true,
-                           pattern:
-                              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                        })}
-                     />
-                     {errors.email &&
-                        errors.email.type === 'required' && (
+                  <form
+                     onSubmit={handleSubmit(onFormSubmittedHandler)}
+                  >
+                     <p>
+                        <label htmlFor="pseudo">Pseudo</label>
+                        <input
+                           type="text"
+                           placeholder="Pseudo"
+                           className="input"
+                           {...register('pseudo', {
+                              required: true,
+                           })}
+                        />
+                        {errors.pseudo && (
                            <small>
                               Veuillez renseigner ce champs
                            </small>
                         )}
-                     {errors.email &&
-                        errors.email.type === 'pattern' && (
+                     </p>
+
+                     <p>
+                        <label htmlFor="email">Adresse email</label>
+                        <input
+                           type="email"
+                           placeholder="Adresse email"
+                           className="input"
+                           {...register('email', {
+                              required: true,
+                              pattern:
+                                 /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                           })}
+                        />
+                        {errors.email &&
+                           errors.email.type === 'required' && (
+                              <small>
+                                 Veuillez renseigner ce champs
+                              </small>
+                           )}
+                        {errors.email &&
+                           errors.email.type === 'pattern' && (
+                              <small>
+                                 Votre adresse email n'est pas
+                                 correct, veuillez verifier de
+                                 nouveau.
+                              </small>
+                           )}
+                     </p>
+
+                     <p>
+                        <label htmlFor="password">Mot de passe</label>
+                        <input
+                           type="password"
+                           placeholder="Mot de passe"
+                           className="input"
+                           {...register('password', {
+                              required: true,
+                           })}
+                        />
+                        {errors.password && (
                            <small>
-                              Votre adresse email n'est pas correct,
-                              veuillez verifier de nouveau.
+                              Veuillez renseigner ce champs
                            </small>
                         )}
-                  </p>
-
-                  <p>
-                     <label htmlFor="password">Mot de passe</label>
-                     <input
-                        type="password"
-                        placeholder="Mot de passe"
-                        className="input"
-                        {...register('password', {
-                           required: true,
-                        })}
-                     />
-                     {errors.password && (
-                        <small>Veuillez renseigner ce champs</small>
-                     )}
-                  </p>
-                  <div
-                     style={{
-                        display: 'flex',
-                        justifyContent: 'end',
-                     }}
-                  >
-                     <Button>
-                        {isLoading ? (
-                           <SpinnerDotted
-                              size={15}
-                              thickness={100}
-                              speed={100}
-                              color="#ffffff"
-                           />
-                        ) : (
-                           "Je m'inscris"
-                        )}
-                     </Button>
-                  </div>
-               </form>
-            </div>
-         </section>
+                     </p>
+                     <div
+                        style={{
+                           display: 'flex',
+                           justifyContent: 'end',
+                        }}
+                     >
+                        <Button>
+                           {isLoading ? (
+                              <SpinnerDotted
+                                 size={15}
+                                 thickness={100}
+                                 speed={100}
+                                 color="#ffffff"
+                              />
+                           ) : (
+                              "Je m'inscris"
+                           )}
+                        </Button>
+                     </div>
+                  </form>
+               </div>
+            </section>
+         )}
+         {success && <Success>{success}</Success>}
       </>
    );
 }
