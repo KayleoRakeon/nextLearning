@@ -40,7 +40,7 @@ export default NextAuth({
             mongoDB.close();
             return {
                email: utilisateur.email,
-               pseudo: utilisateur.pseudo,
+               name: utilisateur.pseudo,
             };
          },
       }),
