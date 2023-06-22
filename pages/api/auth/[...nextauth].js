@@ -1,13 +1,21 @@
 // Librairies
 import NextAuth from 'next-auth/next';
-import Credentials from 'next-auth/providers/credentials';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { connectToDatabase } from '../../../helpers/mongodb';
 import { verifyPassword } from '../../../helpers/auth';
 
-export default NextAuth({
+export const authOptions = {
    providers: [
-      Credentials({
-         async authorize(credentials) {
+      CredentialsProvider({
+         credentials: {
+            name: {
+               label: 'pseudo',
+               type: 'text',
+            },
+            password: { label: 'password', type: 'password' },
+            email: { label: 'email', type: 'email' },
+         },
+         async authorize(credentials, req) {
             // Email & Mot de passe
             const { email, password } = credentials;
 
@@ -58,8 +66,12 @@ export default NextAuth({
          return token;
       },
       async session({ session, token }) {
-         session.user = token.user;
+         if (token) {
+            session.user = token.user;
+         }
          return session;
       },
    },
-});
+};
+
+export default NextAuth(authOptions);
