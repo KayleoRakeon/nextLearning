@@ -2,7 +2,7 @@
 
 // Librairie
 import { useForm } from 'react-hook-form';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { SpinnerDotted } from 'spinners-react';
 import { useRouter } from 'next/router';
@@ -128,4 +128,21 @@ export default function Connexion() {
          </section>
       </>
    );
+}
+
+export async function getServerSideProps(context) {
+   const session = await getSession({ req: context.req });
+
+   if (session) {
+      return {
+         redirect: {
+            destination: '/',
+            permanent: false,
+         },
+      };
+   }
+
+   return {
+      props: { session },
+   };
 }

@@ -3,12 +3,13 @@
 // Librairie
 import classes from './Header.module.css';
 import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 export default function Header() {
    // Variables
    const router = useRouter();
+   const { data: session, status } = useSession();
 
    // Methode
    const onLogoutClickedHandler = () => {
@@ -43,20 +44,30 @@ export default function Header() {
                   <li>
                      <Link href="/projets">Projets</Link>
                   </li>
-                  <li>
-                     <Link href="/ajouter">Ajouter</Link>
-                  </li>
-                  <li>
-                     <Link href="/connexion">Connexion</Link>
-                  </li>
-                  <li>
-                     <Link href="/inscription">Inscription</Link>
-                  </li>
-                  <li>
-                     <a onClick={onLogoutClickedHandler}>
-                        Déconnexion
-                     </a>
-                  </li>
+
+                  {!session && !(status === 'loading') ? (
+                     <>
+                        <li>
+                           <Link href="/connexion">Connexion</Link>
+                        </li>
+                        <li>
+                           <Link href="/inscription">
+                              Inscription
+                           </Link>
+                        </li>
+                     </>
+                  ) : (
+                     <>
+                        <li>
+                           <Link href="/ajouter">Ajouter</Link>
+                        </li>
+                        <li>
+                           <a onClick={onLogoutClickedHandler}>
+                              Déconnexion
+                           </a>
+                        </li>
+                     </>
+                  )}
                </ul>
             </nav>
          </div>

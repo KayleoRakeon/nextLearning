@@ -5,11 +5,15 @@ import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import { SpinnerDotted } from 'spinners-react';
 import { useState } from 'react';
-import Error from '../../components/ui/Error/Error';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
+
+// Components
+import Error from '../../components/ui/Error/Error';
 import Button from '../../components/ui/Button/Button';
 
 export default function Ajouter() {
+   // Variable
    const {
       register,
       handleSubmit,
@@ -21,6 +25,7 @@ export default function Ajouter() {
    const [isLoading, setIsLoading] = useState(false);
    const [error, setError] = useState();
 
+   // Methodes
    const formSubmittedHandler = async (data) => {
       if (!isLoading) {
          setIsLoading(true);
@@ -254,4 +259,21 @@ export default function Ajouter() {
          </main>
       </>
    );
+}
+
+export async function getServerSideProps(context) {
+   const session = await getSession({ req: context.req });
+
+   if (!session) {
+      return {
+         redirect: {
+            destination: '/connexion',
+            permanent: false,
+         },
+      };
+   }
+
+   return {
+      props: { session },
+   };
 }

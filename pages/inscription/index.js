@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import { useState } from 'react';
 import { SpinnerDotted } from 'spinners-react';
+import { getSession } from 'next-auth/react';
 
 // Composant
 import Button from '../../components/ui/Button/Button';
@@ -169,4 +170,21 @@ export default function Inscription() {
          {success && <Success>{success}</Success>}
       </>
    );
+}
+
+export async function getServerSideProps(context) {
+   const session = await getSession({ req: context.req });
+
+   if (session) {
+      return {
+         redirect: {
+            destination: '/',
+            permanent: false,
+         },
+      };
+   }
+
+   return {
+      props: { session },
+   };
 }
