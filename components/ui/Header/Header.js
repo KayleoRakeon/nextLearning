@@ -3,8 +3,19 @@
 // Librairie
 import classes from './Header.module.css';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 export default function Header() {
+   // Variables
+   const router = useRouter();
+
+   // Methode
+   const onLogoutClickedHandler = () => {
+      signOut();
+      router.push('/');
+   };
+
    return (
       <header className={classes.Header}>
          <div
@@ -40,6 +51,11 @@ export default function Header() {
                   </li>
                   <li>
                      <Link href="/inscription">Inscription</Link>
+                  </li>
+                  <li>
+                     <a onClick={onLogoutClickedHandler}>
+                        Déconnexion
+                     </a>
                   </li>
                </ul>
             </nav>
