@@ -3,7 +3,7 @@
 // Librairie
 import classes from './Header.module.css';
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, getSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 export default function Header() {
@@ -45,7 +45,7 @@ export default function Header() {
                      <Link href="/projets">Projets</Link>
                   </li>
 
-                  {!session && !(status === 'loading') ? (
+                  {!session && !(status === 'loading') && (
                      <>
                         <li>
                            <Link href="/connexion">Connexion</Link>
@@ -56,17 +56,21 @@ export default function Header() {
                            </Link>
                         </li>
                      </>
-                  ) : (
-                     <>
+                  )}
+                  {session &&
+                     session.user.roles.includes(
+                        'administrateur'
+                     ) && (
                         <li>
                            <Link href="/ajouter">Ajouter</Link>
                         </li>
-                        <li>
-                           <a onClick={onLogoutClickedHandler}>
-                              Déconnexion
-                           </a>
-                        </li>
-                     </>
+                     )}
+                  {session && (
+                     <li>
+                        <a onClick={onLogoutClickedHandler}>
+                           Déconnexion
+                        </a>
+                     </li>
                   )}
                </ul>
             </nav>

@@ -20,7 +20,12 @@ export default async function handler(req, res) {
       password = await hashPassword(password);
 
       // Stocker le nouveau user
-      const nouveauUser = { pseudo, email, password };
+      const nouveauUser = {
+         pseudo,
+         email,
+         password,
+         roles: ['utilisateur'],
+      };
 
       // Connexion a MongoDB
       let mongoDB;

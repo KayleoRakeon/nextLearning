@@ -271,6 +271,13 @@ export async function getServerSideProps(context) {
             permanent: false,
          },
       };
+   } else if (!session.user.roles.includes('administrateur')) {
+      return {
+         redirect: {
+            destination: '/',
+            permanent: false,
+         },
+      };
    }
 
    return {
