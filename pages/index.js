@@ -52,7 +52,9 @@ export default function Index(props) {
          </Head>
          <h1>
             Bienvenue{' '}
-            {props.user ? props.user.name : 'sur mon projet NextJS'}
+            {props.user
+               ? props.user.name + '!'
+               : 'sur mon projet NextJS !'}
          </h1>
          {error && <Error error={error} />}
          <div
